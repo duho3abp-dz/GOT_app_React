@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+// ----------------- Style -----------------
+
 const HeaderBlock = styled.div`
     display: flex;
     justify-content: space-between;
@@ -25,6 +27,8 @@ const HeaderLinks = styled.ul`
         font-size: 18px;
     }
 `;
+
+// ----------------- App -----------------
 
 const Header = () => {
     return (

@@ -1,12 +1,16 @@
 import React from 'react';
 import {Col, Row, Container} from 'reactstrap';
+
+// import GotService from '../../services'
 import Header from '../header';
 import RandomChar from '../randomChar';
 import ItemList from '../itemList';
 import CharDetails from '../charDetails';
 
+// ----------------- App -----------------
 
 const App = () => {
+
     return (
         <> 
             <Container>
