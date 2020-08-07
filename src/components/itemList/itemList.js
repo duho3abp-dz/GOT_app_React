@@ -4,6 +4,8 @@ import styled from 'styled-components';
 // ----------------- Style -----------------
 
 const UlItemList = styled.ul`
+    margin-top: 20px;
+    
     li {
         cursor: pointer;
     }

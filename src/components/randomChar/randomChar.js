@@ -9,7 +9,7 @@ import ErrorMessage from '../errorMessage';
 const DivRandomBlock = styled.div`
     background-color: #fff;
     padding: 25px 25px 15px 25px;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
 
     h4 {
         margin-bottom: 20px;
@@ -29,6 +29,7 @@ const DivSpinner = styled.div`
 
 // ----------------- App -----------------
 
+// * Logic *
 export default class RandomChar extends Component {
     constructor(props) {
         super(props);
@@ -40,30 +41,30 @@ export default class RandomChar extends Component {
         char: {},
         loading: true,
         error: false
-    }
+    };
 
-    onCharLoaded = (char) => this.setState(({
+    onCharLoaded = (char) => this.setState({
         char,
         loading: false
-    }));
+    });
 
     updateChar() {
         const id = Math.floor(Math.random() * 130 + 25);
-        
+
         this.gotService.getCharacter(id)
             .then(this.onCharLoaded)
             .catch(this.onError);
     }
 
-    onError = (err) => {this.setState({
+    onError = (err) => this.setState({
         loading: false,
         error: true
-    });}
+    });
 
     render() {
         const {char, loading, error} = this.state;
 
-        const content = error ? <ErrorMessage/> : loading ? <DivSpinner><Spinner/></DivSpinner> : <View char={char}/>
+        const content = error ? <ErrorMessage/> : loading ? <DivSpinner><Spinner/></DivSpinner> : <View char={char}/> ;
         
         return (
             <DivRandomBlock className="rounded">
@@ -73,6 +74,7 @@ export default class RandomChar extends Component {
     }
 }
 
+// * Render *
 const View = ({char}) => {
     const {name, gender, born, died, culture} = char;
 
@@ -98,5 +100,5 @@ const View = ({char}) => {
                 </li>
             </ul>
         </>
-    )
-}
+    );
+};
