@@ -18,7 +18,9 @@ export default class GotService {
     
     async getCharacter(id) {
         const res = await this.getResource(`/characters/${id}`);
-        return this._transformCharacter(res)
+        const corrRes = this._checkingCorrInformation(res);
+
+        return this._transformCharacter(corrRes)
     }
 
     async getAllHouses(num) {
@@ -69,5 +71,18 @@ export default class GotService {
             publiser: book.publiser,
             released: book.released
         }
+    }
+
+    _checkingCorrInformation(res) {
+        let corrObj = {};
+        for (let key in res) {
+            if (res[key] === ''){
+                corrObj[key] = 'no info'
+            } else {
+                corrObj[key] = res[key]
+            }
+        }
+
+        return corrObj;
     }
 }
