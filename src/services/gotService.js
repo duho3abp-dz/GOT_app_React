@@ -1,3 +1,5 @@
+// ----------------- App -----------------
+
 export default class GotService {
     constructor() {
         this._apiBase = 'https://www.anapioficeandfire.com/api'
@@ -13,43 +15,42 @@ export default class GotService {
 
     async getAllCharacters(num) {
         const res = await this.getResource(`/characters?page=${num}&pageSize=10`);
-        return res.map(this._transformCharacter())
+        return res.map(item => this._transformCharacter(item));
     }
     
     async getCharacter(id) {
         const res = await this.getResource(`/characters/${id}`);
-        const corrRes = this._checkingCorrInformation(res);
-
-        return this._transformCharacter(corrRes)
+        return this._transformCharacter(res);
     }
 
     async getAllHouses(num) {
         const res = await this.getResource(`/houses?page=${num}&pageSize=10`);
-        return res.map(this._transformHouse())
+        return res.map(this._transformHouse());
     }
     
     async getHouse(id) {
         const res = await this.getResource(`/houses/${id}`);
-        return this._transformHouse(res)
+        return this._transformHouse(res);
     }
 
     async getAllBooks(num) {
         const res = await this.getResource(`/books?page=${num}&pageSize=10`);
-        return res.map(this._transformBooks())
+        return res.map(this._transformBooks());
     }
     
     async getBooks(id) {
         const res = await this.getResource(`/books/${id}`);
-        return this._transformBooks(res)
+        return this._transformBooks(res);
     }
 
     _transformCharacter(char) {
+        const corrChar =this._checkingCorrInformation(char);
         return {
-            name: char.name,
-            gender: char.gender,
-            born: char.born,
-            died: char.died,
-            culture: char.culture
+            name: corrChar.name,
+            gender: corrChar.gender,
+            born: corrChar.born,
+            died: corrChar.died,
+            culture: corrChar.culture
         }
     }
 

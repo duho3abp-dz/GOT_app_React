@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
+
 import GotService from '../../services';
 import Spinner from '../spinner';
 import ErrorMessage from '../errorMessage';
@@ -31,11 +32,6 @@ const DivSpinner = styled.div`
 
 // * Logic *
 export default class RandomChar extends Component {
-    constructor(props) {
-        super(props);
-        this.updateChar()
-    }
-
     gotService = new GotService();
     state = {
         char: {},
@@ -43,12 +39,21 @@ export default class RandomChar extends Component {
         error: false
     };
 
+    componentDidMount() {
+        this.updateChar();
+        this.timerId = setInterval(this.updateChar, 5000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerId);
+    }
+
     onCharLoaded = (char) => this.setState({
         char,
         loading: false
     });
 
-    updateChar() {
+    updateChar = () => {
         const id = Math.floor(Math.random() * 130 + 25);
 
         this.gotService.getCharacter(id)
@@ -65,7 +70,7 @@ export default class RandomChar extends Component {
         const {char, loading, error} = this.state;
 
         const content = error ? <ErrorMessage/> : loading ? <DivSpinner><Spinner/></DivSpinner> : <View char={char}/> ;
-        
+
         return (
             <DivRandomBlock className="rounded">
                 {content}
