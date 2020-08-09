@@ -44,7 +44,7 @@ export default class GotService {
     }
 
     _transformCharacter = (char) => {
-        const corrChar =this._checkingCorrInformation(char);
+        const corrChar = this._checkingCorrInformation(char, 'char');
         return {
             name: corrChar.name,
             gender: corrChar.gender,
@@ -56,37 +56,52 @@ export default class GotService {
     }
 
     _transformHouse = (house) => {
+        const corrHouse = this._checkingCorrInformation(house, 'house');
         return {
-            name: house.name,
-            region: house.region,
-            words: house.words,
-            titles: house.titles,
-            overlord: house.overlord,
-            ancestralWeapons: house.ancestralWeapons
+            name: corrHouse.name,
+            region: corrHouse.region,
+            words: corrHouse.words,
+            titles: corrHouse.titles,
+            overlord: corrHouse.overlord,
+            ancestralWeapons: corrHouse.ancestralWeapons,
+            id: corrHouse.url
         }
     }
 
     _transformBooks = (book) => {
+        const corrBook = this._checkingCorrInformation(book, 'book');
         return {
-            name: book.name,
-            nameOfPages: book.nameOfPages,
-            publiser: book.publiser,
-            released: book.released
+            name: corrBook.name,
+            numberOfPages: corrBook.numberOfPages,
+            publisher: corrBook.publisher,
+            released: corrBook.released,
+            id: corrBook.url
         }
     }
 
-    _checkingCorrInformation = (res) => {
+    _checkingCorrInformation = (res, init) => {
         let corrObj = {};
         for (let key in res) {
-            if (res[key] === ''){
-                corrObj[key] = 'no info'
-            } else if (key === 'url') {
+            if (res[key] === ''  || typeof(res[key]) === 'object'){
+                if (typeof(res[key]) === 'object') {
+                    let elem;
+                    if (res[key].length === 0) {elem = 'no info';} else {
+                        res[key].forEach(item => item === "" ? elem = 'no info' : elem = item )
+                    }
+                    corrObj[key] = elem
+                } else {
+                    corrObj[key] = 'no info'
+                }
+            } else if (key === 'url' && init === 'char') {
                 corrObj[key] = +res[key].slice(49)
+            } else if (key === 'url' && init === 'book') {
+                corrObj[key] = +res[key].slice(44)
+            } else if (key === 'url' && init === 'house') {
+                corrObj[key] = +res[key].slice(45)
             } else {
                 corrObj[key] = res[key]
             }
         }
-
         return corrObj;
     }
 }

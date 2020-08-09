@@ -23,10 +23,10 @@ export default class ItemList extends Component {
     };
 
     componentDidMount() {
-        const {getData} = this.props;
-        // const num = Math.floor(Math.random() * 8 + 2);
+        const {getData, maxPage, minPage} = this.props;
+        const page = Math.floor(Math.random() * maxPage + minPage);
 
-        getData(1)
+        getData(page)
             .then(itemList => this.setState({itemList}))
             .catch(err => this.setState({
                 itemList : null,
@@ -35,7 +35,7 @@ export default class ItemList extends Component {
     }
 
     renderItem = (arr) => {
-        return arr.map((info, i) => {
+        return arr.map(info => {
             const {id} = info
             const label = this.props.renderItem(info);
             return (
@@ -43,8 +43,7 @@ export default class ItemList extends Component {
                     key={id} 
                     className="list-group-item"
                     onClick={() => this.props.onItemSelected(id)}
-                    >
-                    {label}
+                    >{label}
                 </li>
             );
         })

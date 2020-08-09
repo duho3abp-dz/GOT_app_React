@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 
-import GotService from '../../services';
-import ItemList from '../itemList';
-import CharDetails, {Field} from '../charDetails';
-import RowBlock from '../rowBlock';
-import ErrorMessage from '../errorMessage';
+import GotService from '../../../services';
+import ItemList from '../../itemList';
+import CharDetails, {Field} from '../../charDetails';
+import RowBlock from '../../rowBlock';
+import ErrorMessage from '../../errorMessage';
 
 // ----------------- Style -----------------
 
@@ -19,19 +19,19 @@ const DivCharPageError = styled.div`
 
 // ----------------- App -----------------
 
-export default class CharacterPage extends Component {
+export default class HousesPage extends Component {
     gotService = new GotService();
     state = {
-        charId: null,
+        id: null,
         error: false
     }
 
     componentDidCatch() {this.setState({error: true});}
 
-    onItemSelected = charId => this.setState({charId});
+    onItemSelected = id => this.setState({id});
 
     render() {
-        const {charId, error} = this.state;
+        const {id, error} = this.state;
 
         if (error) {
             return (
@@ -43,18 +43,24 @@ export default class CharacterPage extends Component {
 
         const itemList = (
             <ItemList 
-                getData={this.gotService.getAllCharacters}
+                getData={this.gotService.getAllHouses}
                 onItemSelected={this.onItemSelected}
-                renderItem={({name, gender}) => `${name}(${gender})`}
+                minPage={1}
+                maxPage={45}
+                renderItem={({name}) => name}
             />
         );
 
         const charDetails = (
-            <CharDetails charId={charId}>
-                <Field field='gender' label="Gender" />
-                <Field field='born' label="Born" />
-                <Field field='died' label="Died" />
-                <Field field='culture' label="Culture" />
+            <CharDetails 
+                id={id}
+                getDataElem={this.gotService.getHouse}
+            >
+                <Field field='region' label="Region" />
+                <Field field='words' label="Words" />
+                <Field field='titles' label="Titles" />
+                <Field field='overlord' label="Overlord" />
+                <Field field='ancestralWeapons' label="AncestralWeapons" />
             </CharDetails>
         );
 

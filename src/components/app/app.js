@@ -4,12 +4,13 @@ import styled from 'styled-components';
 
 
 import GotService from '../../services';
-import ItemList from '../itemList';
-import CharDetails from '../charDetails';
 import Header from '../header';
 import RandomChar from '../randomChar';
-import CharacterPage from '../characterPage';
 import ErrorMessage from '../errorMessage';
+
+import CharacterPage from '../pages/characterPage';
+import HousesPage from '../pages/housesPage';
+import BooksPage from '../pages/booksPage';
 
 // ----------------- Style -----------------
 
@@ -54,6 +55,7 @@ export default class App extends Component {
                     <Header />
                 </Container>
                 <Container>
+                    
                     <Row>
                         <Col lg={{size: 5, offset: 0}}>
                             {view ? <RandomChar view={view}/> : null}
@@ -64,34 +66,10 @@ export default class App extends Component {
                             </Button>
                         </Col>
                     </Row>
-                    <CharacterPage/>
 
-
-                    <Row>
-                        <Col md='6'>
-                            <ItemList 
-                                onItemSelected={this.onItemSelected}
-                                getData={this.gotService.getAllBooks}
-                                renderItem={({name}) => name}
-                            />
-                        </Col>
-                        <Col md='6'>
-                            <CharDetails/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md='6'>
-                            <ItemList 
-                                getData={this.gotService.getAllHouses}
-                                onItemSelected={this.onItemSelected}
-                                renderItem={({name}) => name}
-                            />
-                        </Col>
-                        <Col md='6'>
-                            <CharDetails />
-                        </Col>
-                    </Row>
-
+                    <CharacterPage />
+                    <HousesPage />
+                    <BooksPage />
 
                 </Container>
             </>
