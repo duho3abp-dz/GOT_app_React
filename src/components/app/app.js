@@ -2,6 +2,10 @@ import React, {Component} from 'react';
 import {Col, Row, Container, Button} from 'reactstrap';
 import styled from 'styled-components';
 
+
+import GotService from '../../services';
+import ItemList from '../itemList';
+import CharDetails from '../charDetails';
 import Header from '../header';
 import RandomChar from '../randomChar';
 import CharacterPage from '../characterPage';
@@ -23,6 +27,7 @@ const DivError = styled.div`
 // ----------------- App -----------------
 
 export default class App extends Component {
+    gotService = new GotService();
     state = {
         view: true,
         error: false
@@ -60,6 +65,34 @@ export default class App extends Component {
                         </Col>
                     </Row>
                     <CharacterPage/>
+
+
+                    <Row>
+                        <Col md='6'>
+                            <ItemList 
+                                onItemSelected={this.onItemSelected}
+                                getData={this.gotService.getAllBooks}
+                                renderItem={({name}) => name}
+                            />
+                        </Col>
+                        <Col md='6'>
+                            <CharDetails/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md='6'>
+                            <ItemList 
+                                getData={this.gotService.getAllHouses}
+                                onItemSelected={this.onItemSelected}
+                                renderItem={({name}) => name}
+                            />
+                        </Col>
+                        <Col md='6'>
+                            <CharDetails />
+                        </Col>
+                    </Row>
+
+
                 </Container>
             </>
         );

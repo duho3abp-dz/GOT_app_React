@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 
-import GotService from '../../services';
-
 import Spinner from '../spinner';
 import ErrorMessage from '../errorMessage';
 
@@ -19,40 +17,44 @@ const UlItemList = styled.ul`
 // ----------------- App -----------------
 
 export default class ItemList extends Component {
-    gotService = new GotService();
     state = {
-        charList: null,
+        itemList: null,
         error: false
     };
 
     componentDidMount() {
+        const {getData} = this.props;
         // const num = Math.floor(Math.random() * 8 + 2);
-        this.gotService.getAllCharacters(5)
-            .then(charList => this.setState({charList}))
+
+        getData(1)
+            .then(itemList => this.setState({itemList}))
             .catch(err => this.setState({
-                charList : null,
+                itemList : null,
                 error: true
             }));
     }
 
     renderItem = (arr) => {
         return arr.map((info, i) => {
+            const {id} = info
+            const label = this.props.renderItem(info);
             return (
                 <li 
-                    key={i} 
+                    key={id} 
                     className="list-group-item"
-                    onClick={() => this.props.onCharSelected(41 + i)}
+                    onClick={() => this.props.onItemSelected(id)}
                     >
-                    {info.name}
+                    {label}
                 </li>
             );
         })
     }
 
     render() {
-        const {charList, error} = this.state;
+        const {itemList, error} = this.state;
 
-        const content = error ? <ErrorMessage/> : !charList ? <Spinner/> : this.renderItem(charList) ;
+        const content = error ? <ErrorMessage/> : 
+                        !itemList ? <Spinner/> : this.renderItem(itemList) ;
 
         return (
             <UlItemList className="list-group">

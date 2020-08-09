@@ -5,7 +5,7 @@ export default class GotService {
         this._apiBase = 'https://www.anapioficeandfire.com/api'
     }
 
-    async getResource(url) {
+    getResource = async (url) => {
         const res = await fetch(`${this._apiBase}${url}`);
     
         if (!res.ok) {throw new Error(`Could not fetch ${this._apiBase}${url}, status: ${res.status}`)}
@@ -13,48 +13,49 @@ export default class GotService {
         return await await res.json();
     }
 
-    async getAllCharacters(num) {
+    getAllCharacters = async (num) => {
         const res = await this.getResource(`/characters?page=${num}&pageSize=10`);
         return res.map(item => this._transformCharacter(item));
     }
     
-    async getCharacter(id) {
+    getCharacter = async (id) => {
         const res = await this.getResource(`/characters/${id}`);
         return this._transformCharacter(res);
     }
 
-    async getAllHouses(num) {
+    getAllHouses = async (num) => {
         const res = await this.getResource(`/houses?page=${num}&pageSize=10`);
-        return res.map(this._transformHouse());
+        return res.map(item => this._transformHouse(item));
     }
     
-    async getHouse(id) {
+    getHouse = async (id) => {
         const res = await this.getResource(`/houses/${id}`);
         return this._transformHouse(res);
     }
 
-    async getAllBooks(num) {
+    getAllBooks = async (num) => {
         const res = await this.getResource(`/books?page=${num}&pageSize=10`);
-        return res.map(this._transformBooks());
+        return res.map(item => this._transformBooks(item));
     }
     
-    async getBooks(id) {
+    getBooks = async (id) => {
         const res = await this.getResource(`/books/${id}`);
         return this._transformBooks(res);
     }
 
-    _transformCharacter(char) {
+    _transformCharacter = (char) => {
         const corrChar =this._checkingCorrInformation(char);
         return {
             name: corrChar.name,
             gender: corrChar.gender,
             born: corrChar.born,
             died: corrChar.died,
-            culture: corrChar.culture
+            culture: corrChar.culture,
+            id: corrChar.url
         }
     }
 
-    _transformHouse(house) {
+    _transformHouse = (house) => {
         return {
             name: house.name,
             region: house.region,
@@ -65,7 +66,7 @@ export default class GotService {
         }
     }
 
-    _transformBooks(book) {
+    _transformBooks = (book) => {
         return {
             name: book.name,
             nameOfPages: book.nameOfPages,
@@ -74,11 +75,13 @@ export default class GotService {
         }
     }
 
-    _checkingCorrInformation(res) {
+    _checkingCorrInformation = (res) => {
         let corrObj = {};
         for (let key in res) {
             if (res[key] === ''){
                 corrObj[key] = 'no info'
+            } else if (key === 'url') {
+                corrObj[key] = +res[key].slice(49)
             } else {
                 corrObj[key] = res[key]
             }

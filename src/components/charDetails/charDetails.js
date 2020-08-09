@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 
 import GotService from '../../services';
+import Spinner from '../spinner';
 import ErrorMessage from '../errorMessage';
 
 // ----------------- Style -----------------
@@ -27,11 +28,21 @@ const DivCarDetails = styled.div`
 
 // ----------------- App -----------------
 
-// * Logic *
+const Field = ({char, field, label}) => {
+    return (
+        <li className="list-group-item d-flex justify-content-between">
+            <span className="term">{label}</span>
+            <span>{char[field]}</span>
+        </li>
+    )
+}
+export {Field};
+
 export default class CharDetails extends Component {
     gotService = new GotService();
     state = {
         char: null,
+        loading: false,
         error: false
     }
 
@@ -49,8 +60,12 @@ export default class CharDetails extends Component {
         const {charId} = this.props;
         if (!charId) {return;}
 
+        this.setState({loading: true})
         this.gotService.getCharacter(charId)
-            .then(char => this.setState({char}))
+            .then(char => this.setState({
+                char,
+                loading: false
+            }))
             .catch(err => this.setState({
                 char: null,
                 error: false
@@ -58,10 +73,26 @@ export default class CharDetails extends Component {
     }
 
     render() {
-        const {char, error} = this.state;
+        const {char, error, loading} = this.state;
 
-        const noSelect = <span className="select-error">Please, select a character</span>
-        const content = error ? <ErrorMessage/> : char ? <UlListCharacter info={char}/> : noSelect;
+        if (!char) {
+            return (
+                <DivCarDetails className="rounded">
+                    <span className="select-error">Please, select a character</span>
+                </DivCarDetails>
+            )
+        }
+        
+        const listItem = (<>
+                <h4>{char.name}</h4>
+                <ul className="list-group list-group-flush">
+                    {React.Children.map(this.props.children, (child) => React.cloneElement(child, {char}))}
+                </ul>
+        </>);
+
+        const content = error ? <ErrorMessage/> : 
+                        loading ? <Spinner/> : 
+                        char ? listItem : null;
 
         return (
             <DivCarDetails className="rounded">
@@ -70,31 +101,3 @@ export default class CharDetails extends Component {
         );
     }
 }
-
-// * Render *
-const UlListCharacter = ({info}) => {
-    const {name, gender, born, died, culture} = info;
-    return (
-        <>
-            <h4>{name}</h4>
-            <ul className="list-group list-group-flush">
-                <li className="list-group-item d-flex justify-content-between">
-                    <span className="term">Gender</span>
-                    <span>{gender}</span>
-                </li>
-                <li className="list-group-item d-flex justify-content-between">
-                    <span className="term">Born</span>
-                    <span>{born}</span>
-                </li>
-                <li className="list-group-item d-flex justify-content-between">
-                    <span className="term">Died</span>
-                    <span>{died}</span>
-                </li>
-                <li className="list-group-item d-flex justify-content-between">
-                    <span className="term">Culture</span>
-                    <span>{culture}</span>
-                </li>
-            </ul>
-        </>
-    );
-};

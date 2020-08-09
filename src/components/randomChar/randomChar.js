@@ -10,6 +10,7 @@ import ErrorMessage from '../errorMessage';
 const DivRandomBlock = styled.div`
     background-color: #fff;
     padding: 25px 25px 15px 25px;
+    margin-top: 10px;
     margin-bottom: 10px;
 
     h4 {
@@ -69,7 +70,8 @@ export default class RandomChar extends Component {
     render() {
         const {char, loading, error} = this.state;
 
-        const content = error ? <ErrorMessage/> : loading ? <DivSpinner><Spinner/></DivSpinner> : <View char={char}/> ;
+        const content = error ? <ErrorMessage/> : 
+                        loading ? <DivSpinner><Spinner/></DivSpinner> : <View char={char}/> ;
 
         return (
             <DivRandomBlock className="rounded">

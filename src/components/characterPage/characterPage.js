@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {Col, Row} from 'reactstrap';
 import styled from 'styled-components';
 
+import GotService from '../../services';
 import ItemList from '../itemList';
-import CharDetails from '../charDetails';
+import CharDetails, {Field} from '../charDetails';
+import RowBlock from '../rowBlock';
 import ErrorMessage from '../errorMessage';
 
 // ----------------- Style -----------------
@@ -19,6 +20,7 @@ const DivCharPageError = styled.div`
 // ----------------- App -----------------
 
 export default class CharacterPage extends Component {
+    gotService = new GotService();
     state = {
         charId: null,
         error: false
@@ -26,7 +28,7 @@ export default class CharacterPage extends Component {
 
     componentDidCatch() {this.setState({error: true});}
 
-    onCharSelected = charId => this.setState({charId});
+    onItemSelected = charId => this.setState({charId});
 
     render() {
         const {charId, error} = this.state;
@@ -39,15 +41,28 @@ export default class CharacterPage extends Component {
             )
         }
 
+        const itemList = (
+            <ItemList 
+                getData={this.gotService.getAllCharacters}
+                onItemSelected={this.onItemSelected}
+                renderItem={({name, gender}) => `${name}(${gender})`}
+            />
+        );
+
+        const charDetails = (
+            <CharDetails charId={charId}>
+                <Field field='gender' label="Gender" />
+                <Field field='born' label="Born" />
+                <Field field='died' label="Died" />
+                <Field field='culture' label="Culture" />
+            </CharDetails>
+        );
+
         return (
-            <Row>
-                <Col md='6'>
-                    <ItemList onCharSelected={this.onCharSelected}/>
-                </Col>
-                <Col md='6'>
-                    <CharDetails charId={charId}/>
-                </Col>
-            </Row>
+            <RowBlock 
+                left={itemList} 
+                right={charDetails}
+            />
         );
     }
 }
