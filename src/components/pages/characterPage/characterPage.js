@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import GotService from '../../../services';
 import ItemList from '../../itemList';
-import CharDetails, {Field} from '../../charDetails';
+import ItemDetails, {Field} from '../../itemDetails';
 import RowBlock from '../../rowBlock';
 import ErrorMessage from '../../errorMessage';
 
@@ -52,7 +52,7 @@ export default class CharacterPage extends Component {
         );
 
         const charDetails = (
-            <CharDetails 
+            <ItemDetails 
                 id={id}
                 getDataElem={this.gotService.getCharacter}
             >
@@ -60,7 +60,7 @@ export default class CharacterPage extends Component {
                 <Field field='born' label="Born" />
                 <Field field='died' label="Died" />
                 <Field field='culture' label="Culture" />
-            </CharDetails>
+            </ItemDetails>
         );
 
         return (

@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
+import {withRouter} from 'react-router-dom';
 
 import GotService from '../../../services';
 import ItemList from '../../itemList';
-import CharDetails, {Field} from '../../charDetails';
-import RowBlock from '../../rowBlock';
 import ErrorMessage from '../../errorMessage';
 
 // ----------------- Style -----------------
@@ -19,19 +18,16 @@ const DivCharPageError = styled.div`
 
 // ----------------- App -----------------
 
-export default class BooksPage extends Component {
+class BooksPage extends Component {
     gotService = new GotService();
     state = {
-        id: null,
         error: false
     }
 
     componentDidCatch() {this.setState({error: true});}
 
-    onItemSelected = id => this.setState({id});
-
     render() {
-        const {id, error} = this.state;
+        const {error} = this.state;
 
         if (error) {
             return (
@@ -41,32 +37,17 @@ export default class BooksPage extends Component {
             )
         }
 
-        const itemList = (
+        return (
             <ItemList 
                 getData={this.gotService.getAllBooks}
-                onItemSelected={this.onItemSelected}
+                onItemSelected={id => {
+                    this.props.history.push(`/books/${id}`)
+                }}
                 minPage={1}
-                maxPage={2}
+                maxPage={1}
                 renderItem={({name}) => name}
-            />
-        );
-
-        const charDetails = (
-            <CharDetails 
-                id={id}
-                getDataElem={this.gotService.getBooks}
-            >
-                <Field field='numberOfPages' label="numberOfPages" />
-                <Field field='publisher' label="publisher" />
-                <Field field='released' label="released" />
-            </CharDetails>
-        );
-
-        return (
-            <RowBlock 
-                left={itemList} 
-                right={charDetails}
             />
         );
     }
 }
+export default withRouter(BooksPage);

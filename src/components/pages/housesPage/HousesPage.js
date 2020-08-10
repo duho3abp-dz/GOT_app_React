@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import GotService from '../../../services';
 import ItemList from '../../itemList';
-import CharDetails, {Field} from '../../charDetails';
+import ItemDetails, {Field} from '../../itemDetails';
 import RowBlock from '../../rowBlock';
 import ErrorMessage from '../../errorMessage';
 
@@ -51,8 +51,8 @@ export default class HousesPage extends Component {
             />
         );
 
-        const charDetails = (
-            <CharDetails 
+        const houseDetails = (
+            <ItemDetails 
                 id={id}
                 getDataElem={this.gotService.getHouse}
             >
@@ -61,13 +61,13 @@ export default class HousesPage extends Component {
                 <Field field='titles' label="Titles" />
                 <Field field='overlord' label="Overlord" />
                 <Field field='ancestralWeapons' label="AncestralWeapons" />
-            </CharDetails>
+            </ItemDetails>
         );
 
         return (
             <RowBlock 
                 left={itemList} 
-                right={charDetails}
+                right={houseDetails}
             />
         );
     }

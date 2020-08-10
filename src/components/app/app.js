@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Col, Row, Container, Button} from 'reactstrap';
 import styled from 'styled-components';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
 
 
 import GotService from '../../services';
@@ -11,8 +12,19 @@ import ErrorMessage from '../errorMessage';
 import CharacterPage from '../pages/characterPage';
 import HousesPage from '../pages/housesPage';
 import BooksPage from '../pages/booksPage';
+import BooksItem from '../pages/booksItem';
+
+import img from './got.jpeg';
 
 // ----------------- Style -----------------
+
+const DivBody = styled.div`
+    overflow-x: hidden;
+    background: url(${img}) center center no-repeat;
+    background-size: cover;
+    font-size: 16px;
+    height: 100vh;	
+`
 
 const DivError = styled.div`
     width: 50%;
@@ -39,7 +51,9 @@ export default class App extends Component {
     onToggleView = () => this.setState(({view}) => ({view: !view}));
 
     render() {
-        const {view, error} = this.state;
+        const {view, error, idBook} = this.state;
+
+        if (idBook) {return}
 
         if (error) {
             return (
@@ -50,29 +64,32 @@ export default class App extends Component {
         }
 
         return (
-            <>
-                <Container>
-                    <Header />
-                </Container>
-                <Container>
-                    
-                    <Row>
-                        <Col lg={{size: 5, offset: 0}}>
-                            {view ? <RandomChar view={view}/> : null}
-                            <Button
-                                color="secondary"
-                                onClick={this.onToggleView}
-                                >toggle Char
-                            </Button>
-                        </Col>
-                    </Row>
+            <Router>
+                <DivBody>
+                    <Container>
+                        <Header />
+                    </Container>
+                    <Container>
 
-                    <CharacterPage />
-                    <HousesPage />
-                    <BooksPage />
+                        <Row>
+                            <Col lg={{size: 5, offset: 0}}>
+                                {view ? <RandomChar view={view}/> : null}
+                                <Button
+                                    color="secondary"
+                                    onClick={this.onToggleView}
+                                    >toggle Char
+                                </Button>
+                            </Col>
+                        </Row>
 
-                </Container>
-            </>
+                        <Route path="/characters" component={CharacterPage} />
+                        <Route path="/houses" component={HousesPage} />
+                        <Route path="/books"  exact component={BooksPage} />
+                        <Route path="/books/:id" render={({match}) => <BooksItem id={match.params.id}/>} />
+
+                    </Container>
+                </DivBody>
+            </Router>
         );
     }
 };

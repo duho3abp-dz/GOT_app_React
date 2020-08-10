@@ -38,7 +38,7 @@ const Field = ({item, field, label}) => {
 }
 export {Field};
 
-export default class CharDetails extends Component {
+export default class ItemDetails extends Component {
     gotService = new GotService();
     state = {
         item: null,
