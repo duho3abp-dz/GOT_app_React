@@ -11,7 +11,7 @@ const DivCarDetails = styled.div`
     background-color: #fff;
     padding: 25px 25px 15px 25px;
     margin-top: 20px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     text-align: center;
 
     h4 {

@@ -9,6 +9,7 @@ import Header from '../header';
 import RandomChar from '../randomChar';
 import ErrorMessage from '../errorMessage';
 
+import IndexPage from '../pages/indexPage';
 import CharacterPage from '../pages/characterPage';
 import HousesPage from '../pages/housesPage';
 import BooksPage from '../pages/booksPage';
@@ -19,11 +20,18 @@ import img from './got.jpeg';
 // ----------------- Style -----------------
 
 const DivBody = styled.div`
+    padding-bottom: 40px;
     overflow-x: hidden;
     background: url(${img}) center center no-repeat;
     background-size: cover;
     font-size: 16px;
     height: 100vh;	
+`
+
+const DivBooks = styled.div`
+    width: 50%;
+    text-align: center;
+    margin: 0 auto;
 `
 
 const DivError = styled.div`
@@ -82,9 +90,10 @@ export default class App extends Component {
                             </Col>
                         </Row>
 
+                        <Route path="/" exact component={IndexPage} />
                         <Route path="/characters" component={CharacterPage} />
                         <Route path="/houses" component={HousesPage} />
-                        <Route path="/books"  exact component={BooksPage} />
+                        <DivBooks><Route path="/books"  exact component={BooksPage} /></DivBooks>
                         <Route path="/books/:id" render={({match}) => <BooksItem id={match.params.id}/>} />
 
                     </Container>
