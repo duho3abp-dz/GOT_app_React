@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 import Spinner from '../spinner';
 import ErrorMessage from '../errorMessage';
@@ -21,6 +22,13 @@ export default class ItemList extends Component {
         itemList: null,
         error: false
     };
+    
+    static defaultProps = {
+        onItemSelected: () => {}
+    }
+    static PropTypes = {
+        onItemSelected: PropTypes.func
+    }
 
     componentDidMount() {
         const {getData, maxPage, minPage} = this.props;

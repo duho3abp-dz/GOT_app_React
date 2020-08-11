@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 import GotService from '../../services';
 import Spinner from '../spinner';
@@ -39,10 +40,18 @@ export default class RandomChar extends Component {
         loading: true,
         error: false
     };
+    static defaultProps = {
+        interval: 5000
+    }
+    
+    static propTypes = {
+        interval: PropTypes.number
+    }
 
     componentDidMount() {
+        const {interval} = this.props;
         this.updateChar();
-        this.timerId = setInterval(this.updateChar, 5000);
+        this.timerId = setInterval(this.updateChar, interval);
     }
 
     componentWillUnmount() {

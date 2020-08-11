@@ -14,6 +14,7 @@ import CharacterPage from '../pages/characterPage';
 import HousesPage from '../pages/housesPage';
 import BooksPage from '../pages/booksPage';
 import BooksItem from '../pages/booksItem';
+// import NotExistingPage from '../pages/notExistingPage';
 
 import img from './got.jpeg';
 
@@ -81,7 +82,7 @@ export default class App extends Component {
 
                         <Row>
                             <Col lg={{size: 5, offset: 0}}>
-                                {view ? <RandomChar view={view}/> : null}
+                                {view ? <RandomChar interval={5000} view={view}/> : null}
                                 <Button
                                     color="secondary"
                                     onClick={this.onToggleView}
@@ -93,8 +94,9 @@ export default class App extends Component {
                         <Route path="/" exact component={IndexPage} />
                         <Route path="/characters" component={CharacterPage} />
                         <Route path="/houses" component={HousesPage} />
-                        <DivBooks><Route path="/books"  exact component={BooksPage} /></DivBooks>
+                        <DivBooks><Route path="/books" exact component={BooksPage} /></DivBooks>
                         <Route path="/books/:id" render={({match}) => <BooksItem id={match.params.id}/>} />
+                        
 
                     </Container>
                 </DivBody>
