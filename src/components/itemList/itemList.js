@@ -17,30 +17,42 @@ const UlItemList = styled.ul`
 
 // ----------------- App -----------------
 
-export default class ItemList extends Component {
-    state = {
-        itemList: null,
-        error: false
-    };
+// * Logic *
+const withData = (View) => {
+    return class extends Component {
+        state = {
+            data: null,
+            error: false
+        };
     
-    static defaultProps = {
-        onItemSelected: () => {}
-    }
-    static PropTypes = {
-        onItemSelected: PropTypes.func
-    }
+        static defaultProps = {
+            onItemSelected: () => {}
+        }
+        static propTypes = {
+            onItemSelected: PropTypes.func
+        }
+    
+        componentDidMount() {
+            const {getData, maxPage, minPage} = this.props;
+            const page = Math.floor(Math.random() * maxPage + minPage);
+    
+            getData(page)
+                .then(data => this.setState({data}))
+                .catch(err => this.setState({
+                    data : null,
+                    error: true
+                }));
+        }
+        
+        render() {
+            const {data, error} = this.state;
+            return <View {...this.props} data={data} error={error} />
+        }
+    };
+};
 
-    componentDidMount() {
-        const {getData, maxPage, minPage} = this.props;
-        const page = Math.floor(Math.random() * maxPage + minPage);
-
-        getData(page)
-            .then(itemList => this.setState({itemList}))
-            .catch(err => this.setState({
-                itemList : null,
-                error: true
-            }));
-    }
+// * Render *
+class ItemList extends Component {
 
     renderItem = (arr) => {
         return arr.map(info => {
@@ -58,10 +70,10 @@ export default class ItemList extends Component {
     }
 
     render() {
-        const {itemList, error} = this.state;
+        const {data, error} = this.props
 
         const content = error ? <ErrorMessage/> : 
-                        !itemList ? <Spinner/> : this.renderItem(itemList) ;
+                        !data ? <Spinner/> : this.renderItem(data) ;
 
         return (
             <UlItemList className="list-group">
@@ -70,3 +82,5 @@ export default class ItemList extends Component {
         );
     }
 }
+
+export default withData(ItemList);
