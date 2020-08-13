@@ -23,7 +23,7 @@ const DivCarDetails = styled.div`
     color: #000000;
     text-align: center;
     font-size: 26px;
-}
+    }
 `
 
 // ----------------- App -----------------

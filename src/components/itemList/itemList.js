@@ -26,13 +26,13 @@ const DivBtnWrap = styled.div`
 const Btn = styled.button`
     width: 100px;
     height: 30px;
-    margin: 10px auto;
+    margin: 10px 10px;
     background: #fff;
     border-radius: 0.25rem;
+`
 
-    :first-child {
-        margin-right: 20px;
-    }
+const SpanNumPage = styled.span`
+    color: #fff;
 `
 
 // ----------------- App -----------------
@@ -60,25 +60,14 @@ function ItemList({getData, onItemSelected, renderItem, maxPage, minPage})  {
         setLoading(true);
         let nextPage;
         if (side === 'next') {
-            if (page < maxPage) {
-                setPage(page + 1);
-                nextPage = page + 1;
-            } else {
-                setPage(minPage);
-                nextPage = minPage;
-            }
+            page < maxPage ? nextPage = page + 1 : nextPage = minPage;
         } else {
-            if (page > minPage) {
-                setPage(page - 1);
-                nextPage = page - 1;
-            } else {
-                setPage(maxPage);
-                nextPage = maxPage;
-            }
+            page > minPage ? nextPage = page - 1 : nextPage = maxPage;
         }
         
         getData(nextPage)
             .then(data => {
+                setPage(nextPage);
                 setLoading(false);
                 setData(data);
             })
@@ -113,6 +102,7 @@ function ItemList({getData, onItemSelected, renderItem, maxPage, minPage})  {
         </UlItemList>
         <DivBtnWrap>
             <Btn onClick={() => changePage(page, 'prev')}>Prev</Btn>
+            <SpanNumPage>{page}/{maxPage}</SpanNumPage>
             <Btn onClick={() => changePage(page, 'next')}>Next</Btn>
         </DivBtnWrap>
     </>);

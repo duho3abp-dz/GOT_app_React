@@ -45,8 +45,8 @@ export default class CharacterPage extends Component {
             <ItemList 
                 getData={this.gotService.getAllCharacters}
                 onItemSelected={this.onItemSelected}
-                minPage={20}
-                maxPage={110}
+                minPage={1}
+                maxPage={214}
                 renderItem={({name, gender}) => `${name}(${gender})`}
             />
         );

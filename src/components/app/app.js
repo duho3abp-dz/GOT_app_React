@@ -14,7 +14,6 @@ import CharacterPage from '../pages/characterPage';
 import HousesPage from '../pages/housesPage';
 import BooksPage from '../pages/booksPage';
 import BooksItem from '../pages/booksItem';
-// import NotExistingPage from '../pages/notExistingPage';
 
 import img from './got.jpeg';
 
