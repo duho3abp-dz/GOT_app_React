@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -9,78 +9,120 @@ import ErrorMessage from '../errorMessage';
 
 const UlItemList = styled.ul`
     margin-top: 20px;
+    min-height: 491px;
+    background: #fff;
 
     li {
         cursor: pointer;
     }
 `
 
+const DivBtnWrap = styled.div`
+    text-align: center;
+
+    
+`
+
+const Btn = styled.button`
+    width: 100px;
+    height: 30px;
+    margin: 10px auto;
+    background: #fff;
+    border-radius: 0.25rem;
+
+    :first-child {
+        margin-right: 20px;
+    }
+`
+
 // ----------------- App -----------------
 
-// * Logic *
-const withData = (View) => {
-    return class extends Component {
-        state = {
-            data: null,
-            error: false
-        };
-    
-        static defaultProps = {
-            onItemSelected: () => {}
-        }
-        static propTypes = {
-            onItemSelected: PropTypes.func
-        }
-    
-        componentDidMount() {
-            const {getData, maxPage, minPage} = this.props;
-            const page = Math.floor(Math.random() * maxPage + minPage);
-    
-            getData(page)
-                .then(data => this.setState({data}))
-                .catch(err => this.setState({
-                    data : null,
-                    error: true
-                }));
+function ItemList({getData, onItemSelected, renderItem, maxPage, minPage})  {
+    const [data, setData] = useState(null);
+    const [error, setErr] = useState(false);
+    const [page, setPage] = useState(minPage);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        getData(page)
+            .then(data => {
+                setLoading(false);
+                setData(data);
+            })
+            .catch(err => {
+                setLoading(false);
+                setData(null);
+                setErr(true);
+            });
+    }, []);
+
+    const changePage = (page, side) => {
+        setLoading(true);
+        let nextPage;
+        if (side === 'next') {
+            if (page < maxPage) {
+                setPage(page + 1);
+                nextPage = page + 1;
+            } else {
+                setPage(minPage);
+                nextPage = minPage;
+            }
+        } else {
+            if (page > minPage) {
+                setPage(page - 1);
+                nextPage = page - 1;
+            } else {
+                setPage(maxPage);
+                nextPage = maxPage;
+            }
         }
         
-        render() {
-            const {data, error} = this.state;
-            return <View {...this.props} data={data} error={error} />
-        }
+        getData(nextPage)
+            .then(data => {
+                setLoading(false);
+                setData(data);
+            })
+            .catch(err => {
+                setLoading(false);
+                setData(null);
+                setErr(true);
+            });
     };
-};
-
-// * Render *
-class ItemList extends Component {
-
-    renderItem = (arr) => {
+    
+    const renderItems = (arr) => {
         return arr.map(info => {
             const {id} = info
-            const label = this.props.renderItem(info);
+            const label = renderItem(info);
             return (
                 <li 
                     key={id} 
                     className="list-group-item"
-                    onClick={() => this.props.onItemSelected(id)}
+                    onClick={() => onItemSelected(id)}
                     >{label}
                 </li>
             );
         })
-    }
+    };
 
-    render() {
-        const {data, error} = this.props
+    const content = loading ? <Spinner/> : error ? <ErrorMessage/> : 
+                    !data ? <Spinner/> : renderItems(data) ;
 
-        const content = error ? <ErrorMessage/> : 
-                        !data ? <Spinner/> : this.renderItem(data) ;
+    return (<>
+        <UlItemList className="list-group">
+            {content}
+        </UlItemList>
+        <DivBtnWrap>
+            <Btn onClick={() => changePage(page, 'prev')}>Prev</Btn>
+            <Btn onClick={() => changePage(page, 'next')}>Next</Btn>
+        </DivBtnWrap>
+    </>);
+};
 
-        return (
-            <UlItemList className="list-group">
-                {content}
-            </UlItemList>
-        );
-    }
+ItemList.defaultProps = {
+    onItemSelected: () => {}
+}
+ItemList.propTypes = {
+    onItemSelected: PropTypes.func
 }
 
-export default withData(ItemList);
+export default ItemList;

@@ -44,7 +44,7 @@ class BooksPage extends Component {
                     this.props.history.push(`/books/${id}`)
                 }}
                 minPage={1}
-                maxPage={1}
+                maxPage={2}
                 renderItem={({name}) => name}
             />
         );

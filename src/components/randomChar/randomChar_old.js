@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -33,45 +33,61 @@ const DivSpinner = styled.div`
 // ----------------- App -----------------
 
 // * Logic *
-function RandomChar({interval}) {
-    const gotService = new GotService();
-    const [char, setChar] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
-
-    useEffect(() => {
-        updateChar();
-        const timerId = setInterval(updateChar, interval);
-        
-        return () => {clearInterval(timerId);};
-    }, []);
-
-    const onCharLoaded = char => {
-        setChar(char);
-        setLoading(false);
+export default class RandomChar extends Component {
+    gotService = new GotService();
+    state = {
+        char: {},
+        loading: true,
+        error: false
     };
+    static defaultProps = {
+        interval: 5000
+    }
+    
+    static propTypes = {
+        interval: PropTypes.number
+    }
 
-    const updateChar = () => {
+    componentDidMount() {
+        const {interval} = this.props;
+        this.updateChar();
+        this.timerId = setInterval(this.updateChar, interval);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerId);
+    }
+
+    onCharLoaded = (char) => this.setState({
+        char,
+        loading: false
+    });
+
+    updateChar = () => {
         const id = Math.floor(Math.random() * 130 + 25);
-        
-        gotService.getCharacter(id)
-            .then(onCharLoaded)
-            .catch(onError);
-    };
 
-    const onError = (err) => {
-        setLoading(false);
-        setError(true);
-    };
+        this.gotService.getCharacter(id)
+            .then(this.onCharLoaded)
+            .catch(this.onError);
+    }
 
-    const content = error ? <ErrorMessage/> : 
-                    loading ? <DivSpinner><Spinner/></DivSpinner> : <View char={char}/> ;
+    onError = (err) => this.setState({
+        loading: false,
+        error: true
+    });
 
-    return (
-        <DivRandomBlock className="rounded">
-            {content}
-        </DivRandomBlock>
-    );
+    render() {
+        const {char, loading, error} = this.state;
+
+        const content = error ? <ErrorMessage/> : 
+                        loading ? <DivSpinner><Spinner/></DivSpinner> : <View char={char}/> ;
+
+        return (
+            <DivRandomBlock className="rounded">
+                {content}
+            </DivRandomBlock>
+        );
+    }
 }
 
 // * Render *
@@ -102,13 +118,3 @@ const View = ({char}) => {
         </>
     );
 };
-
-RandomChar.defaultProps = {
-    interval: 5000
-}
-
-RandomChar.propTypes = {
-    interval: PropTypes.number
-}
-
-export default RandomChar;
