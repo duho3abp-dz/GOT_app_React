@@ -10,7 +10,7 @@ export default class GotService {
     
         if (!res.ok) {throw new Error(`Could not fetch ${this._apiBase}${url}, status: ${res.status}`)}
     
-        return await await res.json();
+        return await res.json();
     }
 
     getAllCharacters = async (num) => {
